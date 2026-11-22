@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mio Scenario — The Clouded Issue</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-title">The Clouded Issue</span>
+        <span class="brand-tag">Edizione 0 /// Lacchiarella</span>
+      </a>
+      <button class="menu-toggle" aria-label="Apri menu" aria-expanded="false">MENU</button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Homepage</a></li>
+          <li><a href="cumulativa.html">Cumulativa</a></li>
+          <li><a href="mio-scenario.html" class="active">Mio scenario</a></li>
+          <li><a href="repository.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="meta-bar">
+      <span>Visualizzazione personale // Lacchiarella</span>
+      <span id="activeCodeLabel">SCENARIO ATTIVO: TCI-067</span>
+    </div>
+
+    <!-- INSERIMENTO CODICE -->
+    <section class="code-bar">
+      <form id="codeForm" class="code-input-wrap">
+        <input
+          type="text"
+          id="scenarioCodeInput"
+          class="code-input"
+          placeholder="Inserisci codice (es. TCI-067 o 3243)"
+          value="TCI-067"
+          aria-label="Codice scenario"
+        >
+        <button type="submit" class="btn">Carica scenario</button>
+      </form>
+
+      <div class="code-presets">
+        <span>Codici di esempio:</span>
+        <button type="button" class="preset-chip" data-code="TCI-033">TCI-033 (Moderato)</button>
+        <button type="button" class="preset-chip" data-code="TCI-067">TCI-067 (Critico)</button>
+        <button type="button" class="preset-chip" data-code="TCI-004">TCI-004 (Estremo)</button>
+      </div>
+    </section>
+
+    <!-- AREA MAPPA + CONTROLLO PIANI -->
+    <div class="workspace-grid">
+      <aside class="controls-panel">
+        <div class="control-group">
+          <span class="control-label">Dividi piani / Layer sulla mappa</span>
+
+          <label class="layer-toggle">
+            <span><span class="dot" style="background: var(--c-salute); margin-right: 6px;"></span>Salute e vivibilità</span>
+            <input type="checkbox" data-layer="layer-salute" checked>
+          </label>
+
+          <label class="layer-toggle">
+            <span><span class="dot" style="background: var(--c-economia); margin-right: 6px;"></span>Economia</span>
+            <input type="checkbox" data-layer="layer-economia" checked>
+          </label>
+
+          <label class="layer-toggle">
+            <span><span class="dot" style="background: var(--c-energia); margin-right: 6px;"></span>Energia e servizi</span>
+            <input type="checkbox" data-layer="layer-energia" checked>
+          </label>
+
+          <label class="layer-toggle">
+            <span><span class="dot" style="background: var(--c-ambiente); margin-right: 6px;"></span>Ambiente</span>
+            <input type="checkbox" data-layer="layer-ambiente" checked>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Azioni rapide</span>
+          <div class="filter-list">
+            <button type="button" class="filter-btn" id="showAllLayers">Mostra tutti i piani</button>
+            <button type="button" class="filter-btn" id="isolateNextLayer">Isola singolo piano</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Sintesi del tuo scenario</span>
+          <p id="scenarioSummary" style="font-size: 0.88rem; color: var(--muted);"></p>
+        </div>
+      </aside>
+
+      <!-- MAPPA CARTOGRAFICA MULTI-LAYER DI LACCHIARELLA -->
+      <section class="map-stage">
+        <svg id="scenarioMap" viewBox="0 0 800 620" role="img" aria-label="Mappa interattiva degli impatti su Lacchiarella">
+          <defs>
+            <!-- Pattern Salute: pallini rosso-arancio -->
+            <pattern id="patSalute" width="14" height="14" patternUnits="userSpaceOnUse">
+              <circle cx="7" cy="7" r="4.5" fill="#EB4225" fill-opacity="0.72" />
+            </pattern>
+            <!-- Pattern Ambiente: griglia verde/marrone -->
+            <pattern id="patAmbiente" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#1D7A4C" stroke-width="1.5" />
+            </pattern>
+            <!-- Pattern Energia: tratteggio blu -->
+            <pattern id="patEnergia" width="8" height="12" patternUnits="userSpaceOnUse">
+              <line x1="4" y1="0" x2="4" y2="9" stroke="#2058D6" stroke-width="3" />
+            </pattern>
+          </defs>
+
+          <!-- BASE CARTOGRAFICA SCHEMATICA LACCHIARELLA -->
+          <g id="layer-base">
+            <rect width="800" height="620" fill="#ECECE8" />
+            <!-- Strade principali (SP40, SP105) -->
+            <path d="M 0 380 L 340 290 L 800 410" fill="none" stroke="#BDBDB8" stroke-width="2" />
+            <path d="M 380 0 L 420 260 L 480 620" fill="none" stroke="#BDBDB8" stroke-width="2" />
+            <path d="M 120 0 L 180 620" fill="none" stroke="#D0D0CB" stroke-width="1.5" />
+            <!-- Tessuto urbano schematizzato -->
+            <rect x="370" y="360" width="130" height="170" fill="#DFDFDA" stroke="#B4B4AE" stroke-width="1" />
+            <rect x="190" y="130" width="100" height="120" fill="#DFDFDA" stroke="#B4B4AE" stroke-width="1" />
+          </g>
+
+          <!-- LAYER 1: SALUTE E VIVIBILITÀ -->
+          <g id="layer-salute"></g>
+
+          <!-- LAYER 4: AMBIENTE -->
+          <g id="layer-ambiente"></g>
+
+          <!-- LAYER 3: ENERGIA E SERVIZI -->
+          <g id="layer-energia"></g>
+
+          <!-- LAYER 2: ECONOMIA -->
+          <g id="layer-economia"></g>
+
+          <!-- PERIMETRO COMPARTO H2a (DATA CENTER) -->
+          <g id="layer-site">
+            <polygon points="300,90 365,75 385,155 435,140 455,215 350,245" fill="rgba(255,255,255,0.65)" stroke="#161616" stroke-width="2.5" />
+            <text x="342" y="168" font-family="monospace" font-size="11" fill="#161616" font-weight="700">COMPARTO H2a</text>
+            <text x="385" y="450" font-family="monospace" font-size="11" fill="#5C5C5A">LACCHIARELLA</text>
+          </g>
+        </svg>
+      </section>
+    </div>
+
+    <!-- LEGENDA E SPIEGAZIONE EFFETTI NEL DETTAGLIO -->
+    <section style="margin-top: 2.5rem;">
+      <div class="meta-bar">
+        <span>Legenda e dettaglio degli effetti</span>
+        <span>4 ambiti di impatto</span>
+      </div>
+      <div class="legend-grid" id="legendContainer"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>THE CLOUDED ISSUE — DCX TERRITORIO (GRUPPO 3)</span>
+      <span>Mio Scenario // Esplorazione Multi-Layer</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/scenario.js"></script>
+</body>
+</html>

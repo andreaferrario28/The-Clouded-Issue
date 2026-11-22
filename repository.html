@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repository — The Clouded Issue</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-title">The Clouded Issue</span>
+        <span class="brand-tag">Edizione 0 /// Lacchiarella</span>
+      </a>
+      <button class="menu-toggle" aria-label="Apri menu" aria-expanded="false">MENU</button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Homepage</a></li>
+          <li><a href="cumulativa.html">Cumulativa</a></li>
+          <li><a href="mio-scenario.html">Mio scenario</a></li>
+          <li><a href="repository.html" class="active">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="meta-bar">
+      <span>Contro-Archivio Civico // Fonti e Documenti</span>
+      <span id="repoCount">12 elementi archiviati</span>
+    </div>
+
+    <div class="repo-toolbar">
+      <div>
+        <h1 style="font-size: 2rem; font-weight: 400; color: var(--accent);">Repository</h1>
+        <p style="font-size: 0.92rem; color: var(--muted);">
+          Documenti ufficiali, comitati locali, ricerche accademiche e fonti per orientarsi oltre l'opacità informativa.
+        </p>
+      </div>
+      <input type="search" id="repoSearch" class="search-input" placeholder="Cerca per parola chiave (es. MASE, falda, Cesate)...">
+    </div>
+
+    <!-- CARTELLE (TABS) -->
+    <div class="folder-tabs" role="tablist" id="folderTabs">
+      <button class="folder-tab active" data-folder="documenti" role="tab">📁 01_Documenti_Ufficiali</button>
+      <button class="folder-tab" data-folder="comitati" role="tab">📁 02_Comitati_e_Proteste</button>
+      <button class="folder-tab" data-folder="ricerca" role="tab">📁 03_Ricerca_e_Report</button>
+      <button class="folder-tab" data-folder="media" role="tab">📁 04_Media_e_Inchieste</button>
+    </div>
+
+    <!-- CONTENUTO CARTELLA -->
+    <section class="folder-window">
+      <div class="repo-grid" id="repoGrid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>THE CLOUDED ISSUE — DCX TERRITORIO (GRUPPO 3)</span>
+      <span>Repository // Archivio Aperto</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/repository.js"></script>
+</body>
+</html>
