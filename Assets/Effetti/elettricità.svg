@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_2" data-name="Livello 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36.23 36.23">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e3ff15;
+      }
+
+      .cls-2 {
+        fill: #ffec3e;
+      }
+    </style>
+  </defs>
+  <g id="tutto">
+    <g>
+      <g>
+        <rect class="cls-2" x="14.79" y="-1.06" width="10.17" height="14.22" transform="translate(11.03 24.84) rotate(-81.74)"/>
+        <rect class="cls-2" x="11.28" y="23.07" width="10.17" height="14.22" transform="translate(-15.85 42.04) rotate(-81.74)"/>
+      </g>
+      <g>
+        <rect class="cls-2" x="-1.06" y="11.28" width="14.22" height="10.17" transform="translate(-11.01 20) rotate(-81.74)"/>
+        <rect class="cls-2" x="23.07" y="14.79" width="14.22" height="10.17" transform="translate(6.18 46.88) rotate(-81.74)"/>
+        <rect class="cls-1" x="11.01" y="11.01" width="14.22" height="14.22" transform="translate(-2.41 33.44) rotate(-81.74)"/>
+      </g>
+    </g>
+  </g>
+</svg>

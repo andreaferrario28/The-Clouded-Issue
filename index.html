@@ -6,20 +6,17 @@
   <title>The Clouded Issue — DCX Territorio</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-
+<body class="home-page">
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand">
         <span class="brand-title">The Clouded Issue</span>
         <span class="brand-tag">Edizione 0 /// Lacchiarella</span>
       </a>
-
       <button class="menu-toggle" aria-label="Apri menu" aria-expanded="false">MENU</button>
-
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html" class="active">Homepage</a></li>
+          <li><a href="index.html" class="active" aria-current="page">Homepage</a></li>
           <li><a href="cumulativa.html">Cumulativa</a></li>
           <li><a href="mio-scenario.html">Mio scenario</a></li>
           <li><a href="repository.html">Repository</a></li>
@@ -28,127 +25,14 @@
     </div>
   </header>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <div class="meta-bar">
-            <span>DCX Territorio — Gruppo 3</span>
-            <span>Milano / 28 Gennaio 2027</span>
-          </div>
-          <h1 class="hero-title">
-            The <span class="wire">Clouded</span><br>Issue
-          </h1>
-          <p class="hero-lead">
-            Finché i dati non saranno chiari, ci saranno tanti futuri quante sono le persone che li immaginano.
-          </p>
-          <div class="hero-actions">
-            <a href="mio-scenario.html" class="btn">Inserisci il tuo codice scenario</a>
-            <a href="cumulativa.html" class="btn btn-outline">Esplora mappa cumulativa</a>
-          </div>
-        </div>
-
-        <aside class="hero-aside">
-          <h2>Prossimo Evento // Edizione 0</h2>
-          <p>
-            <strong>Data Center Lacchiarella</strong><br>
-            Hangar Bicocca — Spazio Cubo, Milano<br>
-            <strong>28 gennaio 2027</strong>
-          </p>
-          <p style="font-size: 0.85rem; color: var(--muted);">
-            Un'installazione tra projection mapping cartografico, simulatore percettivo e mappatura collettiva su pen plotter.
-          </p>
-          <a href="repository.html" class="repo-link">Consulta i documenti dell'edizione →</a>
-        </aside>
-      </div>
-    </section>
-
-    <!-- DESCRIZIONE PROGETTO & CASO STUDIO -->
-    <section class="container">
-      <div class="two-col">
-        <article class="panel-box">
-          <span class="tag tag-accent">Il Progetto</span>
-          <h2 class="panel-title" style="margin-top: 0.75rem;">Denunciare l'opacità informativa</h2>
-          <p style="margin-bottom: 1rem;">
-            Come può il design della comunicazione denunciare l'opacità informativa riguardo il futuro di territori in rapida evoluzione, rendendo visibile la discordanza percettiva all'interno di una comunità?
-          </p>
-          <p style="color: var(--muted);">
-            Il projection mapping interattivo applicato alla cartografia e la mappatura della percezione si ibridano in un'unica narrazione per visualizzare scenari ipotetici riguardo gli impatti dei data center sul territorio.
-          </p>
-        </article>
-
-        <article class="panel-box accent-box">
-          <span class="tag">Caso Studio // Lacchiarella (MI)</span>
-          <h2 class="panel-title" style="margin-top: 0.75rem;">I dati certi sul campus</h2>
-          <p style="color: var(--muted);">
-            A pochi chilometri da Milano, tra le risaie di Lacchiarella, è previsto il campus di data center più grande d'Italia. Ecco i parametri ufficiali estratti dalla documentazione tecnica:
-          </p>
-          <div class="data-strip">
-            <div class="data-stat">
-              <strong>288 MW</strong>
-              <span>Potenza nominale</span>
-            </div>
-            <div class="data-stat">
-              <strong>229.000 m²</strong>
-              <span>Suolo greenfield</span>
-            </div>
-            <div class="data-stat">
-              <strong>160</strong>
-              <span>Generatori a gasolio</span>
-            </div>
-            <div class="data-stat">
-              <strong>380 kV</strong>
-              <span>Elettrodotti interrati</span>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- LE 5 FASI DELL'ESPERIENZA -->
-      <div style="margin-top: 3rem;">
-        <div class="meta-bar">
-          <span>Struttura dell'installazione</span>
-          <span>Hangar Bicocca // Cubo</span>
-        </div>
-        <div class="phases-grid">
-          <div class="phase-item">
-            <span class="phase-num">01</span>
-            <h3>Introduzione</h3>
-            <p>Pannello introduttivo e video teaser sul fenomeno dei data center nell'hinterland milanese.</p>
-          </div>
-          <div class="phase-item">
-            <span class="phase-num">02</span>
-            <h3>Problematizzazione</h3>
-            <p>Wall con voci del dibattito pubblico, proteste dei comitati e notizie frammentate.</p>
-          </div>
-          <div class="phase-item">
-            <span class="phase-num">03</span>
-            <h3>Traduzione</h3>
-            <p>Simulatore interattivo e projection mapping sugli impatti percepiti in 4 ambiti.</p>
-          </div>
-          <div class="phase-item">
-            <span class="phase-num">04</span>
-            <h3>Mappatura</h3>
-            <p>Pen plotter che traccia in tempo reale la mappa cumulativa di tutti gli scenari.</p>
-          </div>
-          <div class="phase-item">
-            <span class="phase-num">05</span>
-            <h3>Svelamento</h3>
-            <p>Confronto tra percezioni, previsioni ufficiali MASE, controdeduzioni e attivazione.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+  <main class="home-stage">
+    <h1 class="home-title">
+      <img src="Assets/logo.svg" width="3229" height="1915" alt="The Clouded Issue">
+    </h1>
+    <div class="home-trail" aria-hidden="true"></div>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>THE CLOUDED ISSUE — DCX TERRITORIO (GRUPPO 3)</span>
-      <span>Erik Bottacin · Giulia D'Ercole · Andrea Ferrario · Giulia Roberti</span>
-    </div>
-  </footer>
-
   <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>

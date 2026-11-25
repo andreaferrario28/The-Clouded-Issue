@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_2" data-name="Livello 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108.87 108.87">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #634142;
+        stroke-miterlimit: 10;
+        stroke-width: 35px;
+      }
+    </style>
+  </defs>
+  <g id="reference">
+    <line class="cls-1" x1="54.43" x2="54.43" y1="0" y2="108.87"/>
+    <line class="cls-1" x1="0" x2="108.87" y1="54.43" y2="54.43"/>
+  </g>
+</svg>
