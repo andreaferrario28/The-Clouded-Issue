@@ -26,86 +26,81 @@
     </div>
   </header>
 
-  <main class="container">
-    <div class="meta-bar">
-      <span>Mappatura d'insieme // Pen Plotter</span>
-      <span id="scenarioCount">Scenari raccolti: 18</span>
-    </div>
+  <main>
+    <section class="plotter-stage" aria-label="Pen plotter">
+      <div class="meta-bar">
+        <span>Mappatura d'insieme // Pen Plotter</span>
+        <span id="scenarioCount">Scenari raccolti: 18</span>
+      </div>
+      <svg id="plotterSvg" viewBox="32 32 736 736" role="img" aria-label="Mappa cumulativa degli scenari"></svg>
+      <div class="plotter-tooltip" id="plotterTooltip">
+        <strong>Seleziona o esplora</strong><br>
+        Passa su un nodo del pen plotter per ispezionare lo scenario.
+      </div>
+    </section>
 
-    <div class="workspace-grid">
-      <!-- PANNELLO FILTRI -->
-      <aside class="controls-panel">
-        <div class="control-group">
-          <span class="control-label">Modalità di visualizzazione</span>
-          <div class="filter-list">
-            <button class="filter-btn active" data-mode="all">
-              <span>Mappa cumulativa completa</span>
-              <span>●</span>
-            </button>
-          </div>
+    <aside class="container plotter-controls">
+      <div class="control-group">
+        <span class="control-label">Modalità di visualizzazione</span>
+        <div class="filter-list">
+          <button class="filter-btn active" data-mode="all">
+            <span>Mappa cumulativa completa</span>
+            <span>●</span>
+          </button>
         </div>
+      </div>
 
-        <div class="control-group">
-          <span class="control-label">Filtro per livello di urgenza</span>
-          <div class="filter-list">
-            <button class="filter-btn" data-urgency="1">
-              <span>1 — Rassicurante</span>
-              <span>Anello 1</span>
-            </button>
-            <button class="filter-btn" data-urgency="2">
-              <span>2 — Moderato</span>
-              <span>Anello 2</span>
-            </button>
-            <button class="filter-btn" data-urgency="3">
-              <span>3 — Critico</span>
-              <span>Anello 3</span>
-            </button>
-            <button class="filter-btn" data-urgency="4">
-              <span>4 — Estremo</span>
-              <span>Anello 4</span>
-            </button>
-          </div>
+      <div class="control-group">
+        <span class="control-label">Filtro per livello di urgenza</span>
+        <div class="filter-list">
+          <button class="filter-btn" data-urgency="1">
+            <span>1 — Rassicurante</span>
+            <span>Anello 1</span>
+          </button>
+          <button class="filter-btn" data-urgency="2">
+            <span>2 — Moderato</span>
+            <span>Anello 2</span>
+          </button>
+          <button class="filter-btn" data-urgency="3">
+            <span>3 — Critico</span>
+            <span>Anello 3</span>
+          </button>
+          <button class="filter-btn" data-urgency="4">
+            <span>4 — Estremo</span>
+            <span>Anello 4</span>
+          </button>
         </div>
+      </div>
 
-        <div class="control-group">
-          <span class="control-label">Filtro per parametro</span>
-          <div class="filter-list">
-            <button class="filter-btn" data-param="salute">
-              <span>Salute e vivibilità</span>
-              <span class="dot" style="background: var(--c-salute);"></span>
-            </button>
-            <button class="filter-btn" data-param="economia">
-              <span>Economia</span>
-              <span class="dot" style="background: var(--c-economia);"></span>
-            </button>
-            <button class="filter-btn" data-param="energia">
-              <span>Energia e servizi</span>
-              <span class="dot" style="background: var(--c-energia);"></span>
-            </button>
-            <button class="filter-btn" data-param="ambiente">
-              <span>Ambiente</span>
-              <span class="dot" style="background: var(--c-ambiente-alt);"></span>
-            </button>
-          </div>
+      <div class="control-group">
+        <span class="control-label">Filtro per parametro</span>
+        <div class="filter-list">
+          <button class="filter-btn" data-param="salute">
+            <span>Salute e vivibilità</span>
+            <span class="dot" style="background: var(--c-salute);"></span>
+          </button>
+          <button class="filter-btn" data-param="economia">
+            <span>Economia</span>
+            <span class="dot" style="background: var(--c-economia);"></span>
+          </button>
+          <button class="filter-btn" data-param="energia">
+            <span>Energia e servizi</span>
+            <span class="dot" style="background: var(--c-energia);"></span>
+          </button>
+          <button class="filter-btn" data-param="ambiente">
+            <span>Ambiente</span>
+            <span class="dot" style="background: var(--c-ambiente-alt);"></span>
+          </button>
         </div>
+      </div>
 
-        <div class="control-group">
-          <span class="control-label">Come leggere il tracciato</span>
-          <p style="font-size: 0.82rem; color: var(--muted);">
-            Ogni linea radiale rappresenta lo scenario generato da un visitatore. I 4 anelli concentrici indicano il livello di urgenza percepita, dal centro (rassicurante) verso l'esterno (estremo). Passa il mouse sui nodi per leggere il codice.
-          </p>
-        </div>
-      </aside>
-
-      <!-- CANVAS PEN PLOTTER SVG -->
-      <section class="plotter-stage">
-        <svg id="plotterSvg" viewBox="0 0 800 800" role="img" aria-label="Mappa cumulativa degli scenari"></svg>
-        <div class="plotter-tooltip" id="plotterTooltip">
-          <strong>Seleziona o esplora</strong><br>
-          Passa su un nodo del pen plotter per ispezionare lo scenario.
-        </div>
-      </section>
-    </div>
+      <div class="control-group">
+        <span class="control-label">Come leggere il tracciato</span>
+        <p style="font-size: 0.82rem; color: var(--muted);">
+          Ogni linea radiale rappresenta lo scenario generato da un visitatore. I 4 anelli concentrici indicano il livello di urgenza percepita, dal centro (rassicurante) verso l'esterno (estremo). Passa il mouse sui nodi per leggere il codice.
+        </p>
+      </div>
+    </aside>
   </main>
 
   <footer class="site-footer">

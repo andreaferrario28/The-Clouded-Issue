@@ -281,37 +281,17 @@ main {
   width: var(--particle-size);
   height: var(--particle-size);
   object-fit: contain;
-  animation: home-particle-glitch var(--particle-lifetime) linear both;
+  animation: home-particle-fade var(--particle-lifetime) linear both;
 }
 
-@keyframes home-particle-glitch {
-  0% {
-    opacity: 0.3;
-    transform: translate(-80%, -50%) scale(0.75);
-    clip-path: inset(22% 0 43%);
-    animation-timing-function: steps(1, end);
-  }
-  4% {
-    opacity: 1;
-    transform: translate(-25%, -65%) scale(1.18);
-    clip-path: inset(0 0 32%);
-    animation-timing-function: steps(1, end);
-  }
-  8% {
-    opacity: 0.55;
-    transform: translate(-65%, -40%) scale(0.9);
-    clip-path: inset(35% 0 0);
-    animation-timing-function: steps(1, end);
-  }
-  12%, 25% {
+@keyframes home-particle-fade {
+  0%, 25% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
-    clip-path: inset(0);
   }
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.16);
-    clip-path: inset(0);
   }
 }
 
@@ -402,32 +382,53 @@ main {
 }
 
 .plotter-stage {
-  border: 1px solid var(--border);
+  min-height: calc(100vh - var(--header-h));
+  min-height: calc(100dvh - var(--header-h));
+  border-bottom: 1px solid var(--border);
   background: var(--surface);
-  padding: 1.5rem;
+  padding: 1rem clamp(0.5rem, 2vw, 1.5rem);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#plotterSvg {
+.plotter-stage .meta-bar {
   width: 100%;
-  max-width: 720px;
+  margin-bottom: 0;
+}
+
+#plotterSvg {
+  width: min(100%, max(48rem, calc(100vh - var(--header-h) - 3.5rem)));
+  width: min(100%, max(48rem, calc(100dvh - var(--header-h) - 3.5rem)));
   height: auto;
+  flex: none;
+  margin-block: auto;
   display: block;
 }
 
 .plotter-tooltip {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 3rem;
+  right: 1.5rem;
   background: var(--bg);
   border: 1px solid var(--border);
   padding: 0.75rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   max-width: 240px;
+}
+
+.plotter-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.5rem;
+}
+
+.plotter-controls .control-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 /* ==========================================================================
@@ -688,6 +689,14 @@ main {
 /* ==========================================================================
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
+@media (max-width: 1100px) {
+  .plotter-tooltip {
+    position: static;
+    max-width: none;
+    width: 100%;
+  }
+}
+
 @media (max-width: 960px) {
   .workspace-grid {
     grid-template-columns: 1fr;
@@ -718,12 +727,5 @@ main {
 
   .nav-links.open {
     display: flex;
-  }
-
-  .plotter-tooltip {
-    position: static;
-    margin-top: 1rem;
-    max-width: 100%;
-    width: 100%;
   }
 }
