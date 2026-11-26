@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const lbl = el('text', {
         x: CX + 6,
         y: CY - r + 12,
-        'font-family': 'monospace',
         'font-size': 9,
         fill: '#5C5C5A'
       });
