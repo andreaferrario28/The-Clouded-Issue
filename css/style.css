@@ -304,19 +304,6 @@ main {
 /* ==========================================================================
    PAGINA CUMULATIVA (PEN PLOTTER)
    ========================================================================== */
-.workspace-grid {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-.controls-panel {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  padding: 1.5rem;
-}
-
 .control-group {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
@@ -434,129 +421,232 @@ main {
 /* ==========================================================================
    PAGINA MIO SCENARIO (CODICE + MAPPA LAYER + LEGENDA)
    ========================================================================== */
-.code-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
+.scenario-page {
+  flex: none;
+  display: grid;
+  grid-template-columns: clamp(16rem, 20vw, 19rem) minmax(0, 1fr);
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
+  background: #ECECE8;
+}
+
+.scenario-sidebar {
+  overflow: auto;
+  padding: 1rem 0 1rem 1rem;
+}
+
+.scenario-card {
   border: 1px solid var(--accent);
   background: var(--surface);
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
+  padding: 0.85rem;
 }
 
-.code-input-wrap {
-  display: flex;
-  flex: 1;
-  min-width: 240px;
+.scenario-card + .scenario-card {
+  margin-top: 1rem;
 }
 
-.code-input {
-  flex: 1;
+.scenario-search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+}
+
+.scenario-search input {
+  min-width: 0;
+  width: 100%;
   border: 1px solid var(--border);
-  border-right: none;
-  padding: 0.75rem 1rem;
+  background: var(--bg);
+  padding: 0.45rem;
+  font: 0.78rem var(--font-mono);
+}
+
+.scenario-card .btn {
+  padding: 0.45rem 0.65rem;
+  font: 0.75rem var(--font-mono);
+}
+
+.scenario-view-toggle {
+  width: 100%;
+  margin-top: 0.65rem;
+}
+
+.scenario-view-toggle[hidden] {
+  display: none;
+}
+
+.scenario-data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.scenario-data th,
+.scenario-data td {
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.scenario-data th {
+  font-weight: 400;
+  text-align: left;
+}
+
+.scenario-data td {
+  padding-left: 0.5rem;
+  text-align: right;
   font-family: var(--font-mono);
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.scenario-data tbody + tbody tr:first-child > * {
+  border-top-color: var(--accent);
+}
+
+.scenario-details h2 {
   font-size: 1rem;
-  text-transform: uppercase;
-  background: var(--bg);
+  font-weight: 400;
+  line-height: 1.25;
 }
 
-.code-presets {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+.scenario-details {
+  scroll-margin-top: calc(var(--header-h) + 0.75rem);
 }
 
-.preset-chip {
-  border: 1px solid var(--border-light);
-  background: var(--bg);
-  padding: 0.35rem 0.65rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  cursor: pointer;
+.scenario-detail-level {
+  margin: 0.35rem 0 0.65rem;
+  color: var(--muted);
+  font: 0.72rem var(--font-mono);
 }
 
-.preset-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+#scenarioDetailTitle,
+#scenarioDetailEffects {
+  font-size: 0.85rem;
+}
+
+#scenarioDetailEffects {
+  padding-left: 1.15rem;
+  margin: 0.45rem 0 0.9rem;
+}
+
+#scenarioDetailEffects li + li {
+  margin-top: 0.25rem;
 }
 
 .map-stage {
-  border: 1px solid var(--border);
-  background: #ECECE8;
   position: relative;
+  min-width: 0;
+  min-height: 0;
   overflow: hidden;
+}
+
+.scenario-load-state:not([hidden]) {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #ECECE8;
+  text-align: center;
+}
+
+.scenario-load-state [hidden] {
+  display: none;
+}
+
+#scenarioLoadProgress {
+  width: min(100%, 20rem);
+  height: 0.75rem;
+  accent-color: var(--accent);
 }
 
 #scenarioMap {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
 }
 
-.layer-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--border-light);
-  background: var(--bg);
-  cursor: pointer;
-  margin-bottom: 0.5rem;
+#scenarioMap[hidden] {
+  display: none;
 }
 
-.layer-toggle input {
-  accent-color: var(--accent);
-  width: 16px;
-  height: 16px;
+.scenario-view-status,
+.scenario-view-help {
+  font: 0.75rem var(--font-mono);
+  color: var(--muted);
 }
 
-.legend-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-  margin-top: 2rem;
-}
-
-.effect-card {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  padding: 1.5rem;
-  border-top: 4px solid var(--ink);
-}
-
-.effect-card[data-param="salute"] { border-top-color: var(--c-salute); }
-.effect-card[data-param="economia"] { border-top-color: var(--c-economia); }
-.effect-card[data-param="energia"] { border-top-color: var(--c-energia); }
-.effect-card[data-param="ambiente"] { border-top-color: var(--c-ambiente); }
-
-.effect-card h3 {
-  font-size: 1.15rem;
-  margin: 0.5rem 0 0.75rem;
-}
-
-.effect-list {
-  list-style: none;
-  font-size: 0.9rem;
-}
-
-.effect-list li {
-  padding-left: 1.1rem;
-  position: relative;
-  margin-bottom: 0.35rem;
-}
-
-.effect-list li::before {
-  content: '▼';
+.scenario-view-help {
   position: absolute;
+  inset: auto 0.75rem 0.75rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.scenario-viewport {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+}
+
+.scenario-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.scenario-canvas:active {
+  cursor: grabbing;
+}
+
+.scenario-canvas.is-over-plane {
+  cursor: pointer;
+}
+
+.scenario-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.scenario-plane-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scenario-plane-label {
+  position: absolute;
+  top: 0;
   left: 0;
-  color: var(--accent);
-  font-size: 0.65rem;
-  top: 0.2rem;
+  translate: 0 -50%;
+  border-left: 2px solid currentColor;
+  background: var(--surface);
+  padding: 0.1rem 0.35rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.56rem, 0.8vw, 0.72rem);
+  white-space: nowrap;
+}
+
+.scenario-plane-label[data-category="salute"] { border-color: var(--c-salute); }
+.scenario-plane-label[data-category="economia"] { border-color: var(--c-economia); }
+.scenario-plane-label[data-category="energia"] { border-color: var(--c-energia); }
+.scenario-plane-label[data-category="ambiente"] { border-color: var(--c-ambiente); }
+
+.scenario-plane-label.is-extracted {
+  translate: -100% -50%;
+  background: var(--ink);
+  color: var(--surface);
+}
+
+@container (max-width: 43rem) {
+  .scenario-plane-label {
+    translate: -100% -50%;
+  }
 }
 
 /* ==========================================================================
@@ -697,17 +787,25 @@ main {
   }
 }
 
-@media (max-width: 960px) {
-  .workspace-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .legend-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 720px) {
+  .scenario-page {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: calc(100dvh - var(--header-h));
+  }
+
+  .scenario-sidebar {
+    padding: 0.75rem;
+  }
+
+  .map-stage {
+    min-height: max(25rem, 62svh);
+  }
+
+  .scenario-plane-label {
+    translate: -100% -50%;
+  }
+
   .menu-toggle {
     display: inline-block;
   }

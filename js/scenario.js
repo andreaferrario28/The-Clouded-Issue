@@ -2,11 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('codeForm');
   const input = document.getElementById('scenarioCodeInput');
   const activeCodeLabel = document.getElementById('activeCodeLabel');
-  const summaryEl = document.getElementById('scenarioSummary');
-  const legendContainer = document.getElementById('legendContainer');
   if (!form) return;
 
   const NS = 'http://www.w3.org/2000/svg';
+  let currentScenario;
+  let focusedCategory = null;
+  let separated = false;
+  let viewer;
 
   // Dizionario scenari per ciascuno dei 4 ambiti (livelli 1–4)
   const EFFECTS_DB = {
@@ -50,10 +52,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Codici noti dalla mostra
   const PRESET_CODES = {
-    'TCI-033': { salute: 2, economia: 1, energia: 2, ambiente: 1, desc: 'Scenario moderato: percepisci impatti gestibili con compensazioni verdi e raffreddamento a secco.' },
-    'TCI-067': { salute: 2, economia: 3, energia: 3, ambiente: 3, desc: 'Scenario critico: l\'avanzare della cementificazione sottrae terreni agricoli e genera disagio acustico e termico.' },
-    'TCI-004': { salute: 4, economia: 4, energia: 4, ambiente: 4, desc: 'Scenario estremo: il cemento cancella l\'identità agricola del territorio con rischi cumulativi su falda, aria e rete.' }
+    'TCI-033': { salute: 2, economia: 1, energia: 2, ambiente: 1 },
+    'TCI-067': { salute: 2, economia: 3, energia: 3, ambiente: 3 },
+    'TCI-004': { salute: 4, economia: 4, energia: 4, ambiente: 4 },
   };
+
+  const levelNames = ['Rassicurante', 'Moderato', 'Critico', 'Estremo'];
+  const parameterRows = document.getElementById('scenarioParameters');
+  const details = document.getElementById('scenarioDetails');
+  const detailName = document.getElementById('scenarioDetailName');
+  const detailLevel = document.getElementById('scenarioDetailLevel');
+  const detailTitle = document.getElementById('scenarioDetailTitle');
+  const detailEffects = document.getElementById('scenarioDetailEffects');
+  const stackHelp = document.getElementById('scenarioStackHelp');
+  const combinedHelp = document.getElementById('scenarioCombinedHelp');
+  const detailHelp = document.getElementById('scenarioDetailHelp');
+  const codeList = document.getElementById('scenarioCodes');
+
+  for (const code of Object.keys(PRESET_CODES)) {
+    codeList.append(new Option(code));
+  }
+
+  const parameterCells = Object.entries(EFFECTS_DB).map(([key, { name }]) => {
+    const row = parameterRows.insertRow();
+    const heading = document.createElement('th');
+    heading.scope = 'row';
+    heading.textContent = name;
+    row.append(heading);
+    return [key, row.insertCell()];
+  });
 
   function el(tag, attrs = {}) {
     const node = document.createElementNS(NS, tag);
@@ -75,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         economia: clamp(digits[1]),
         energia: clamp(digits[2]),
         ambiente: clamp(digits[3]),
-        desc: 'Scenario personalizzato ricostruito dal tuo codice simulatore.'
       };
     }
 
@@ -88,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
       economia: ((hash + 1) % 4) + 1,
       energia: ((hash + 2) % 4) + 1,
       ambiente: ((hash + 3) % 4) + 1,
-      desc: 'Scenario ricostruito dal codice inserito. Esplora i singoli layer sulla mappa.'
     };
   }
 
@@ -160,78 +185,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
-  function renderLegend(sc) {
-    legendContainer.innerHTML = '';
-    const levelNames = ['Rassicurante', 'Moderato', 'Critico', 'Estremo'];
+  function showDetails(category) {
+    const opening = category && focusedCategory !== category;
+    focusedCategory = category;
+    details.hidden = detailHelp.hidden = !category;
+    stackHelp.hidden = !separated || Boolean(category);
+    combinedHelp.hidden = separated;
+    if (!category) return;
 
-    ['salute', 'economia', 'energia', 'ambiente'].forEach(key => {
-      const lvl = sc[key];
-      const info = EFFECTS_DB[key];
-      const data = info.levels[lvl];
-
-      const card = document.createElement('article');
-      card.className = 'effect-card';
-      card.dataset.param = key;
-      card.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span class="tag">${info.name}</span>
-          <span class="tag tag-accent">Livello ${lvl}/4 · ${levelNames[lvl - 1]}</span>
-        </div>
-        <h3>${data.title}</h3>
-        <ul class="effect-list">
-          ${data.bullets.map(b => `<li>${b}</li>`).join('')}
-        </ul>
-      `;
-      legendContainer.appendChild(card);
-    });
+    const { name, levels } = EFFECTS_DB[category];
+    const level = currentScenario[category];
+    const { title, bullets } = levels[level];
+    detailName.textContent = name;
+    detailLevel.textContent = `Livello ${level}/4 · ${levelNames[level - 1]}`;
+    detailTitle.textContent = title;
+    detailEffects.replaceChildren(...bullets.map(effect => {
+      const item = document.createElement('li');
+      item.textContent = effect;
+      return item;
+    }));
+    if (opening && window.matchMedia('(max-width: 720px)').matches) {
+      details.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
   }
 
-  function loadScenario(codeStr) {
-    const sc = decodeCode(codeStr);
-    input.value = sc.code;
-    activeCodeLabel.textContent = `SCENARIO ATTIVO: ${sc.code}`;
-    summaryEl.textContent = sc.desc;
+  function loadScenario(code) {
+    const sc = decodeCode(code);
+    currentScenario = sc;
+    input.value = activeCodeLabel.textContent = sc.code;
+    for (const [key, cell] of parameterCells) {
+      cell.textContent = `${sc[key]}/4`;
+      cell.title = levelNames[sc[key] - 1];
+    }
     renderMapLayers(sc);
-    renderLegend(sc);
+    showDetails(focusedCategory);
+    viewer?.setScenario(sc);
   }
 
-  // Event listeners
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    loadScenario(input.value);
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (input.value.trim()) loadScenario(input.value);
   });
 
-  document.querySelectorAll('.preset-chip').forEach(chip => {
-    chip.addEventListener('click', () => loadScenario(chip.dataset.code));
-  });
-
-  // Controllo visibilità singoli layer
-  const checkboxes = document.querySelectorAll('input[data-layer]');
-  checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      const target = document.getElementById(cb.dataset.layer);
-      if (target) target.style.display = cb.checked ? 'inline' : 'none';
-    });
-  });
-
-  document.getElementById('showAllLayers').addEventListener('click', () => {
-    checkboxes.forEach(cb => {
-      cb.checked = true;
-      document.getElementById(cb.dataset.layer).style.display = 'inline';
-    });
-  });
-
-  let isolateIdx = 0;
-  document.getElementById('isolateNextLayer').addEventListener('click', () => {
-    checkboxes.forEach((cb, i) => {
-      const active = i === isolateIdx;
-      cb.checked = active;
-      document.getElementById(cb.dataset.layer).style.display = active ? 'inline' : 'none';
-    });
-    isolateIdx = (isolateIdx + 1) % checkboxes.length;
-  });
-
-  // Legge eventuale ?code= dall'URL (es. arrivando dalla pagina Cumulativa)
   const params = new URLSearchParams(window.location.search);
   loadScenario(params.get('code') || 'TCI-067');
+
+  const status = document.getElementById('scenarioViewStatus');
+  const loadState = document.getElementById('scenarioLoadState');
+  const progress = document.getElementById('scenarioLoadProgress');
+  const fallbackButton = document.getElementById('showScenarioFallback');
+  const viewport = document.getElementById('scenarioViewport');
+  const canvas = document.getElementById('scenarioCanvas');
+  const labels = document.getElementById('scenarioPlaneLabels');
+  const stackButton = document.getElementById('showScenarioStack');
+  const viewToggle = document.getElementById('toggleScenarioView');
+  const viewHelp = document.getElementById('scenarioViewHelp');
+  const fallbackMap = document.getElementById('scenarioMap');
+  const categoryNames = Object.fromEntries(
+    Object.entries(EFFECTS_DB).map(([key, info]) => [key, info.name])
+  );
+
+  function showLoadError(message) {
+    viewer = null;
+    viewport.hidden = viewHelp.hidden = viewToggle.hidden = true;
+    showDetails(null);
+    progress.hidden = true;
+    fallbackButton.hidden = false;
+    loadState.hidden = false;
+    status.textContent = message;
+  }
+
+  fallbackButton.addEventListener('click', () => {
+    fallbackMap.removeAttribute('hidden');
+    loadState.hidden = true;
+  });
+
+  stackButton.addEventListener('click', () => {
+    viewer.showStack();
+    canvas.focus({ preventScroll: true });
+  });
+  viewToggle.addEventListener('click', () => {
+    separated = !separated;
+    viewToggle.textContent = separated ? 'Riunisci ambiti' : 'Dividi ambiti';
+    viewToggle.setAttribute('aria-expanded', String(separated));
+    viewer.setSeparated(separated);
+  });
+  canvas.addEventListener('webglcontextlost', () => {
+    showLoadError('La vista 3D si è interrotta. Ricarica la pagina per riaprirla.');
+  });
+
+  import('./scenario-3d/viewer.js').then(({ createScenarioViewer }) =>
+    createScenarioViewer({
+      viewport, canvas, labels, categoryNames,
+      onProgress(fraction) {
+        progress.value = Math.max(progress.value, Math.floor(fraction * 100));
+        if (fraction >= 0.6 && status.textContent !== 'Preparazione degli effetti…') {
+          status.textContent = 'Preparazione degli effetti…';
+        }
+      },
+      onFocusChange: showDetails,
+    })
+  ).then(async instance => {
+    viewer = instance;
+    viewer.setScenario(currentScenario);
+    progress.value = 96;
+    status.textContent = 'Preparazione della vista 3D…';
+    viewport.hidden = false;
+    await instance.renderFirstFrame();
+    if (viewer !== instance) return;
+    loadState.hidden = true;
+    viewHelp.hidden = viewToggle.hidden = false;
+  }).catch(error => {
+    console.error('Vista 3D di Lacchiarella:', error);
+    showLoadError('Vista 3D non disponibile.');
+  });
 });
