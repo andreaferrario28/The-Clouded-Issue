@@ -54,7 +54,21 @@ function raster(polyLists, M) {
   const x = c.getContext('2d', { willReadFrequently: true });
   x.fillStyle = '#000';
   x.beginPath();
-  polyLists.forEach((p) => tracePolys(x, p, M));
+  // La rete stradale ha molte facce: rasterizzarle a blocchi riduce il costo di fill().
+  const batchSize = 2048;
+  for (const polygons of polyLists) {
+    if (polygons.length <= batchSize) {
+      tracePolys(x, polygons, M);
+      continue;
+    }
+    x.fill();
+    for (let i = 0; i < polygons.length; i += batchSize) {
+      x.beginPath();
+      tracePolys(x, polygons.slice(i, i + batchSize), M);
+      x.fill();
+    }
+    x.beginPath();
+  }
   x.fill();
   const d = x.getImageData(0, 0, M, M).data;
   const out = new Uint8Array(M * M);

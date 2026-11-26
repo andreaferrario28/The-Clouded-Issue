@@ -1,20 +1,17 @@
 const stage = document.querySelector('.home-stage');
 const trail = stage.querySelector('.home-trail');
-const canAnimate = window.matchMedia(
-  '(any-hover: hover) and (prefers-reduced-motion: no-preference)'
-);
+const canAnimate = window.matchMedia('(prefers-reduced-motion: no-preference)');
 
 const effectFiles = [
   'brownfield.svg',
   'calore.svg',
   'campi.svg',
-  'elettricita\u0300.svg',
+  'elettricità.svg',
   'emissioni.svg',
   'falde.svg',
   'fauna.svg',
   'posti di lavoro.svg',
   'rumore.svg',
-  'traffico.svg',
   'valore immobiliare.svg',
 ];
 
@@ -22,6 +19,7 @@ const particles = new Map();
 const maxParticles = 180;
 let effects = [];
 let lastSample = null;
+let activeTouch = null;
 let cellSize = 20;
 
 function resetTrail() {
@@ -45,7 +43,7 @@ function addParticle(column, row, distanceFromCenter) {
   if (particles.has(cell)) return;
 
   const effect = effects[Math.floor(Math.random() * effects.length)];
-  if (!effect.naturalWidth) return;
+  if (!effect?.naturalWidth) return;
 
   if (particles.size >= maxParticles) {
     const [oldestCell, oldestParticle] = particles.entries().next().value;
@@ -87,9 +85,7 @@ function emitStripe(x, y, horizontal) {
   }
 }
 
-stage.addEventListener('pointermove', (event) => {
-  if (!canAnimate.matches || event.pointerType !== 'mouse') return;
-
+function samplePointer(event) {
   const { left, top } = stage.getBoundingClientRect();
   const x = event.clientX - left;
   const y = event.clientY - top;
@@ -118,10 +114,35 @@ stage.addEventListener('pointermove', (event) => {
     x: lastSample.x + stepX * steps,
     y: lastSample.y + stepY * steps,
   };
+}
+
+stage.addEventListener('pointerdown', (event) => {
+  if (!canAnimate.matches || event.pointerType !== 'touch' || !event.isPrimary) return;
+  activeTouch = event.pointerId;
+  lastSample = null;
+  stage.setPointerCapture(event.pointerId);
+  samplePointer(event);
 });
 
-stage.addEventListener('pointerleave', () => {
+stage.addEventListener('pointermove', (event) => {
+  if (!canAnimate.matches) return;
+  const movingTouch = event.pointerId === activeTouch;
+  const movingMouse = activeTouch === null && event.pointerType === 'mouse';
+  if (movingTouch || movingMouse) samplePointer(event);
+});
+
+function endTouch(event) {
+  if (event.pointerId !== activeTouch) return;
+  activeTouch = null;
   lastSample = null;
+}
+
+stage.addEventListener('pointerup', endTouch);
+stage.addEventListener('pointercancel', endTouch);
+stage.addEventListener('lostpointercapture', endTouch);
+
+stage.addEventListener('pointerleave', () => {
+  if (activeTouch === null) lastSample = null;
 });
 window.addEventListener('resize', resetTrail);
 canAnimate.addEventListener('change', resetTrail);

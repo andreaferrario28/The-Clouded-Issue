@@ -6,30 +6,42 @@
 
 export const MODEL_URL = new URL('../../Assets/3D/lacchiarella.obj', import.meta.url);
 
-// Scarica l'OBJ mostrando l'avanzamento (onProgress riceve 0–1)
-export async function loadMappa(url = MODEL_URL, onProgress = () => {}) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('OBJ non trovato: ' + url);
-  const total = +res.headers.get('content-length') || 18.5e6;
-  let text;
-  if (res.body && res.body.getReader) {
-    const reader = res.body.getReader();
-    const chunks = [];
-    let got = 0;
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-      got += value.length;
-      onProgress(Math.min(1, got / total));
-    }
-    const all = new Uint8Array(got);
-    let o = 0;
-    for (const c of chunks) { all.set(c, o); o += c.length; }
-    text = new TextDecoder().decode(all);
-  } else {
-    text = await res.text();
+// Rigenera la copia web con: gzip -n -9 -c Assets/3D/lacchiarella.obj > Assets/3D/lacchiarella.obj.gz
+const COMPRESSED_MODEL_URL = new URL(MODEL_URL.href + '.gz');
+
+async function readModel(url, onProgress, compressed = false) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('OBJ non trovato: ' + url);
+  let stream = response.body;
+  const total = Number(response.headers.get('content-length'));
+  if (stream && total > 0 && typeof TransformStream === 'function') {
+    let received = 0;
+    stream = stream.pipeThrough(new TransformStream({
+      transform(chunk, controller) {
+        received += chunk.byteLength;
+        onProgress(Math.min(1, received / total));
+        controller.enqueue(chunk);
+      },
+    }));
   }
+  if (compressed) {
+    if (!stream) throw new Error('Stream del modello compresso non disponibile');
+    stream = stream.pipeThrough(new DecompressionStream('gzip'));
+  }
+  return stream ? new Response(stream).text() : response.text();
+}
+
+// La copia gzip conserva tutte le facce dell'OBJ originale.
+export async function loadMappa(url = MODEL_URL, onProgress = () => {}) {
+  let text;
+  if (url === MODEL_URL && typeof DecompressionStream === 'function') {
+    try {
+      text = await readModel(COMPRESSED_MODEL_URL, onProgress, true);
+    } catch (error) {
+      console.warn('Copia compressa del modello non disponibile:', error.message);
+    }
+  }
+  text ??= await readModel(url, onProgress);
   onProgress(1);
   return parseOBJ(text);
 }

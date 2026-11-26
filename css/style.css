@@ -288,7 +288,13 @@ main {
   }
 }
 
-@media (prefers-reduced-motion: reduce), (any-hover: none) {
+@media (prefers-reduced-motion: no-preference) {
+  .home-stage {
+    touch-action: pinch-zoom;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .home-trail {
     display: none;
   }
